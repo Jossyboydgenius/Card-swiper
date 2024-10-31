@@ -1,0 +1,51 @@
+name: Code Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Run Flutter Test Coverage
+        run: flutter test --coverage
+
+      - name: Upload Coverage to Codecov
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: true
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Run Flutter Format
+        run: dart format --set-exit-if-changed .
+
+      - name: Run Flutter Analyze
+        run: flutter analyze
