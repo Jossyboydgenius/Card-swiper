@@ -1,0 +1,17 @@
+name: example
+description: Example for the flutter_card_swiper
+
+publish_to: "none"
+version: 0.0.1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_card_swiper:
+    path: ../
+
+flutter:
+  uses-material-design: true
